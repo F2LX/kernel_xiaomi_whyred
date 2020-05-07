@@ -2729,7 +2729,7 @@ int smblib_set_prop_pd_current_max(struct smb_charger *chg,
 }
 
 #if defined(CONFIG_KERNEL_CUSTOM_E7S)
-#define FLOAT_CURRENT_UA		500000
+#define FLOAT_CURRENT_UA		1000000
 #else
 #define FLOAT_CURRENT_UA		1000000
 #endif
@@ -3916,9 +3916,12 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		 * limit ICL to 100mA, the USB driver will enumerate to check
 		 * if this is a SDP and appropriately set the current
 		 */
-		#if defined (CONFIG_KERNEL_CUSTOM_E7S)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 500000);
-		#endif
+#if defined (CONFIG_KERNEL_CUSTOM_E7S)
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
+#else
+		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
+#endif
+		smblib_err(chg, "lct battery smblib_force_legacy_icl float charger\n");
 		break;
 	case POWER_SUPPLY_TYPE_USB_HVDCP:
 		#if defined(CONFIG_KERNEL_CUSTOM_E7S)
